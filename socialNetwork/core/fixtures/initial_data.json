@@ -1,0 +1,654 @@
+[
+  {
+    "model": "core.city",
+    "pk": 1,
+    "fields": {
+      "name": "Москва",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 2,
+    "fields": {
+      "name": "Санкт-Петербург",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 3,
+    "fields": {
+      "name": "Новосибирск",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 4,
+    "fields": {
+      "name": "Екатеринбург",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 5,
+    "fields": {
+      "name": "Казань",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 6,
+    "fields": {
+      "name": "Нижний Новгород",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 7,
+    "fields": {
+      "name": "Челябинск",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 8,
+    "fields": {
+      "name": "Самара",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 9,
+    "fields": {
+      "name": "Омск",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.city",
+    "pk": 10,
+    "fields": {
+      "name": "Ростов-на-Дону",
+      "country": "Россия"
+    }
+  },
+  {
+    "model": "core.role",
+    "pk": 1,
+    "fields": {
+      "name": "user",
+      "description": "Обычный пользователь"
+    }
+  },
+  {
+    "model": "core.role",
+    "pk": 2,
+    "fields": {
+      "name": "moderator",
+      "description": "Модератор платформы"
+    }
+  },
+  {
+    "model": "core.role",
+    "pk": 3,
+    "fields": {
+      "name": "admin",
+      "description": "Администратор платформы"
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$test$dummy",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "ivan@example.com",
+      "first_name": "Иван",
+      "last_name": "Иванов",
+      "username": "ivan_ivanov",
+      "avatar_url": null,
+      "bio": "Люблю программирование",
+      "phone": null,
+      "city": 1,
+      "birth_date": null,
+      "gender": "M",
+      "is_online": false,
+      "last_seen": null,
+      "is_verified": false,
+      "role": 1,
+      "is_staff": false,
+      "is_active": true,
+      "created_at": "2025-01-01T10:00:00Z",
+      "updated_at": "2025-01-01T10:00:00Z",
+      "created_by": null,
+      "updated_by": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$test$dummy",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "maria@example.com",
+      "first_name": "Мария",
+      "last_name": "Петрова",
+      "username": "maria_p",
+      "avatar_url": null,
+      "bio": "Дизайнер",
+      "phone": null,
+      "city": 2,
+      "birth_date": null,
+      "gender": "F",
+      "is_online": false,
+      "last_seen": null,
+      "is_verified": false,
+      "role": 1,
+      "is_staff": false,
+      "is_active": true,
+      "created_at": "2025-01-01T10:05:00Z",
+      "updated_at": "2025-01-01T10:05:00Z",
+      "created_by": null,
+      "updated_by": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$test$dummy",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "alex@example.com",
+      "first_name": "Алексей",
+      "last_name": "Сидоров",
+      "username": "alex_s",
+      "avatar_url": null,
+      "bio": "Фотограф",
+      "phone": null,
+      "city": 1,
+      "birth_date": null,
+      "gender": "M",
+      "is_online": false,
+      "last_seen": null,
+      "is_verified": false,
+      "role": 1,
+      "is_staff": false,
+      "is_active": true,
+      "created_at": "2025-01-01T10:10:00Z",
+      "updated_at": "2025-01-01T10:10:00Z",
+      "created_by": null,
+      "updated_by": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$admin$test",
+      "last_login": null,
+      "is_superuser": true,
+      "email": "admin@example.com",
+      "first_name": "Админ",
+      "last_name": "Системы",
+      "username": "admin",
+      "avatar_url": null,
+      "bio": "Администратор",
+      "phone": null,
+      "city": 1,
+      "birth_date": null,
+      "gender": "M",
+      "is_online": false,
+      "last_seen": null,
+      "is_verified": true,
+      "role": 3,
+      "is_staff": true,
+      "is_active": true,
+      "created_at": "2025-01-01T09:00:00Z",
+      "updated_at": "2025-01-01T09:00:00Z",
+      "created_by": null,
+      "updated_by": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "core.community",
+    "pk": 1,
+    "fields": {
+      "name": "Программисты",
+      "description": "Сообщество для программистов",
+      "avatar_url": null,
+      "cover_url": null,
+      "type": "open",
+      "owner": 1,
+      "members_count": 3,
+      "is_verified": false,
+      "created_at": "2025-01-01T11:00:00Z",
+      "updated_at": "2025-01-01T11:00:00Z",
+      "created_by": 1,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.community",
+    "pk": 2,
+    "fields": {
+      "name": "Фотографы",
+      "description": "Клуб фотографов",
+      "avatar_url": null,
+      "cover_url": null,
+      "type": "open",
+      "owner": 3,
+      "members_count": 2,
+      "is_verified": false,
+      "created_at": "2025-01-01T11:30:00Z",
+      "updated_at": "2025-01-01T11:30:00Z",
+      "created_by": 3,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.usercommunity",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "community": 1,
+      "role": "admin",
+      "joined_at": "2025-01-01T11:00:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.usercommunity",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "community": 1,
+      "role": "member",
+      "joined_at": "2025-01-01T11:05:00Z",
+      "created_by": 2
+    }
+  },
+  {
+    "model": "core.usercommunity",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "community": 1,
+      "role": "member",
+      "joined_at": "2025-01-01T11:10:00Z",
+      "created_by": 3
+    }
+  },
+  {
+    "model": "core.usercommunity",
+    "pk": 4,
+    "fields": {
+      "user": 3,
+      "community": 2,
+      "role": "admin",
+      "joined_at": "2025-01-01T11:30:00Z",
+      "created_by": 3
+    }
+  },
+  {
+    "model": "core.usercommunity",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "community": 2,
+      "role": "member",
+      "joined_at": "2025-01-01T11:35:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.friendship",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "friend": 2,
+      "status": "accepted",
+      "created_at": "2025-01-01T12:00:00Z",
+      "updated_at": "2025-01-01T12:00:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.friendship",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "friend": 3,
+      "status": "accepted",
+      "created_at": "2025-01-01T12:05:00Z",
+      "updated_at": "2025-01-01T12:05:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.friendship",
+    "pk": 3,
+    "fields": {
+      "user": 2,
+      "friend": 3,
+      "status": "pending",
+      "created_at": "2025-01-01T12:10:00Z",
+      "updated_at": "2025-01-01T12:10:00Z",
+      "created_by": 2
+    }
+  },
+  {
+    "model": "core.post",
+    "pk": 1,
+    "fields": {
+      "author": 1,
+      "community": null,
+      "content": "Привет всем! Это мой первый пост.",
+      "views_count": 0,
+      "is_published": true,
+      "created_at": "2025-01-01T13:00:00Z",
+      "updated_at": "2025-01-01T13:00:00Z",
+      "created_by": 1,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.post",
+    "pk": 2,
+    "fields": {
+      "author": 2,
+      "community": null,
+      "content": "Сегодня отличная погода!",
+      "views_count": 0,
+      "is_published": true,
+      "created_at": "2025-01-01T13:30:00Z",
+      "updated_at": "2025-01-01T13:30:00Z",
+      "created_by": 2,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.post",
+    "pk": 3,
+    "fields": {
+      "author": 3,
+      "community": null,
+      "content": "Новые фотографии в альбоме.",
+      "views_count": 0,
+      "is_published": true,
+      "created_at": "2025-01-01T14:00:00Z",
+      "updated_at": "2025-01-01T14:00:00Z",
+      "created_by": 3,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.post",
+    "pk": 4,
+    "fields": {
+      "author": 1,
+      "community": 1,
+      "content": "Обсуждаем новые технологии.",
+      "views_count": 0,
+      "is_published": true,
+      "created_at": "2025-01-01T14:30:00Z",
+      "updated_at": "2025-01-01T14:30:00Z",
+      "created_by": 1,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.comment",
+    "pk": 1,
+    "fields": {
+      "post": 1,
+      "author": 2,
+      "parent": null,
+      "content": "Добро пожаловать!",
+      "created_at": "2025-01-01T13:05:00Z",
+      "updated_at": "2025-01-01T13:05:00Z",
+      "created_by": 2,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.comment",
+    "pk": 2,
+    "fields": {
+      "post": 1,
+      "author": 3,
+      "parent": null,
+      "content": "Рад видеть тебя здесь!",
+      "created_at": "2025-01-01T13:10:00Z",
+      "updated_at": "2025-01-01T13:10:00Z",
+      "created_by": 3,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.comment",
+    "pk": 3,
+    "fields": {
+      "post": 2,
+      "author": 1,
+      "parent": null,
+      "content": "Согласен!",
+      "created_at": "2025-01-01T13:35:00Z",
+      "updated_at": "2025-01-01T13:35:00Z",
+      "created_by": 1,
+      "updated_by": null
+    }
+  },
+  {
+    "model": "core.like",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "post": 1,
+      "comment": null,
+      "created_at": "2025-01-01T13:02:00Z"
+    }
+  },
+  {
+    "model": "core.like",
+    "pk": 2,
+    "fields": {
+      "user": 3,
+      "post": 1,
+      "comment": null,
+      "created_at": "2025-01-01T13:03:00Z"
+    }
+  },
+  {
+    "model": "core.like",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "post": 2,
+      "comment": null,
+      "created_at": "2025-01-01T13:31:00Z"
+    }
+  },
+  {
+    "model": "core.like",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "post": null,
+      "comment": 1,
+      "created_at": "2025-01-01T13:06:00Z"
+    }
+  },
+  {
+    "model": "core.chat",
+    "pk": 1,
+    "fields": {
+      "type": "private",
+      "name": null,
+      "avatar_url": null,
+      "created_at": "2025-01-01T15:00:00Z",
+      "updated_at": "2025-01-01T15:00:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.chat",
+    "pk": 2,
+    "fields": {
+      "type": "group",
+      "name": "Рабочий чат",
+      "avatar_url": null,
+      "created_at": "2025-01-01T15:30:00Z",
+      "updated_at": "2025-01-01T15:30:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.chatparticipant",
+    "pk": 1,
+    "fields": {
+      "chat": 1,
+      "user": 1,
+      "role": "member",
+      "joined_at": "2025-01-01T15:00:00Z",
+      "last_read_at": null
+    }
+  },
+  {
+    "model": "core.chatparticipant",
+    "pk": 2,
+    "fields": {
+      "chat": 1,
+      "user": 2,
+      "role": "member",
+      "joined_at": "2025-01-01T15:00:00Z",
+      "last_read_at": null
+    }
+  },
+  {
+    "model": "core.chatparticipant",
+    "pk": 3,
+    "fields": {
+      "chat": 2,
+      "user": 1,
+      "role": "admin",
+      "joined_at": "2025-01-01T15:30:00Z",
+      "last_read_at": null
+    }
+  },
+  {
+    "model": "core.chatparticipant",
+    "pk": 4,
+    "fields": {
+      "chat": 2,
+      "user": 2,
+      "role": "member",
+      "joined_at": "2025-01-01T15:30:00Z",
+      "last_read_at": null
+    }
+  },
+  {
+    "model": "core.chatparticipant",
+    "pk": 5,
+    "fields": {
+      "chat": 2,
+      "user": 3,
+      "role": "member",
+      "joined_at": "2025-01-01T15:31:00Z",
+      "last_read_at": null
+    }
+  },
+  {
+    "model": "core.message",
+    "pk": 1,
+    "fields": {
+      "chat": 1,
+      "sender": 1,
+      "content": "Привет! Как дела?",
+      "status": "read",
+      "reply_to": null,
+      "created_at": "2025-01-01T15:05:00Z",
+      "updated_at": "2025-01-01T15:05:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.message",
+    "pk": 2,
+    "fields": {
+      "chat": 1,
+      "sender": 2,
+      "content": "Привет! Всё хорошо!",
+      "status": "read",
+      "reply_to": null,
+      "created_at": "2025-01-01T15:06:00Z",
+      "updated_at": "2025-01-01T15:06:00Z",
+      "created_by": 2
+    }
+  },
+  {
+    "model": "core.message",
+    "pk": 3,
+    "fields": {
+      "chat": 2,
+      "sender": 1,
+      "content": "Добро пожаловать в чат!",
+      "status": "read",
+      "reply_to": null,
+      "created_at": "2025-01-01T15:32:00Z",
+      "updated_at": "2025-01-01T15:32:00Z",
+      "created_by": 1
+    }
+  },
+  {
+    "model": "core.media",
+    "pk": 1,
+    "fields": {
+      "owner": 3,
+      "type": "image",
+      "url": "/uploads/photo1.jpg",
+      "thumbnail_url": "/uploads/thumbs/photo1.jpg",
+      "mime_type": "image/jpeg",
+      "size": 2048576,
+      "original_name": "photo1.jpg",
+      "post": 3,
+      "message": null,
+      "created_at": "2025-01-01T14:01:00Z",
+      "created_by": 3
+    }
+  },
+  {
+    "model": "core.media",
+    "pk": 2,
+    "fields": {
+      "owner": 1,
+      "type": "image",
+      "url": "/uploads/avatar1.png",
+      "thumbnail_url": "/uploads/thumbs/avatar1.png",
+      "mime_type": "image/png",
+      "size": 512000,
+      "original_name": "avatar.png",
+      "post": null,
+      "message": null,
+      "created_at": "2025-01-01T10:30:00Z",
+      "created_by": 1
+    }
+  }
+]
