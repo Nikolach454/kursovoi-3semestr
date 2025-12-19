@@ -133,6 +133,23 @@ class PostViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
+    @action(methods=['GET'], detail=False)
+    def advanced_search(self, request):
+        from datetime import timedelta
+
+        min_views = request.query_params.get('min_views', 10)
+        week_ago = timezone.now() - timedelta(days=7)
+
+        posts = Post.objects.filter(
+            (Q(views_count__gte=min_views) | Q(likes__isnull=False)) &
+            Q(is_published=True) &
+            ~Q(community__isnull=True) &
+            Q(created_at__gte=week_ago)
+        ).distinct().select_related('author', 'community')[:20]
+
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
 
 class CommunityViewSet(viewsets.ModelViewSet):
     queryset = Community.objects.all()
@@ -280,4 +297,22 @@ class CommunityViewSet(viewsets.ModelViewSet):
         ).select_related('author')[:20]
 
         serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['GET'], detail=False)
+    def recommended(self, request):
+        from datetime import timedelta
+
+        month_ago = timezone.now() - timedelta(days=30)
+
+        communities = Community.objects.filter(
+            (Q(is_verified=True) | Q(members_count__gte=50)) &
+            Q(type='open') &
+            ~Q(owner__is_active=False) &
+            Q(created_at__gte=month_ago)
+        ).annotate(
+            total_members=Count('members')
+        ).order_by('-total_members')[:15]
+
+        serializer = self.get_serializer(communities, many=True)
         return Response(serializer.data)
