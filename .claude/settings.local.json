@@ -7,7 +7,8 @@
       "Bash(docker-compose run:*)",
       "Bash(cat:*)",
       "Bash(echo:*)",
-      "Bash(docker-compose exec:*)"
+      "Bash(docker-compose exec:*)",
+      "Bash(pip install:*)"
     ]
   }
 }
