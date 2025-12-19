@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    {% if action == 'create' %}
+        Создать публикацию
+    {% else %}
+        Редактировать публикацию
+    {% endif %}
+    - Социальная сеть
+{% endblock %}
+
+{% block content %}
+<h1>
+    {% if action == 'create' %}
+        Создать новую публикацию
+    {% else %}
+        Редактировать публикацию
+    {% endif %}
+</h1>
+
+<form method="post" style="margin-top: 30px;">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="message error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="form-group">
+        <label for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+        {% if form.content.help_text %}
+            <p style="font-size: 13px; color: #666; margin-bottom: 5px;">{{ form.content.help_text }}</p>
+        {% endif %}
+        {{ form.content }}
+        {% if form.content.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.content.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.community.id_for_label }}">{{ form.community.label }}</label>
+        {% if form.community.help_text %}
+            <p style="font-size: 13px; color: #666; margin-bottom: 5px;">{{ form.community.help_text }}</p>
+        {% endif %}
+        {{ form.community }}
+        {% if form.community.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.community.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label style="display: inline-flex; align-items: center; cursor: pointer;">
+            {{ form.is_published }}
+            <span style="margin-left: 8px;">{{ form.is_published.label }}</span>
+        </label>
+        {% if form.is_published.help_text %}
+            <p style="font-size: 13px; color: #666; margin-top: 5px;">{{ form.is_published.help_text }}</p>
+        {% endif %}
+        {% if form.is_published.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.is_published.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 30px;">
+        <button type="submit" class="btn">
+            {% if action == 'create' %}
+                Создать публикацию
+            {% else %}
+                Сохранить изменения
+            {% endif %}
+        </button>
+        <a href="{% if action == 'edit' %}{% url 'core:post_detail' post.id %}{% else %}{% url 'core:post_list' %}{% endif %}" class="btn btn-secondary" style="margin-left: 10px;">Отмена</a>
+    </div>
+</form>
+{% endblock %}

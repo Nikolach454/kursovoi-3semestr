@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Удалить публикацию - Социальная сеть{% endblock %}
+
+{% block content %}
+<h1>Подтверждение удаления</h1>
+
+<div style="border: 1px solid #dc3545; padding: 30px; margin-top: 30px; border-radius: 8px; background-color: #f8d7da;">
+    <h2 style="color: #721c24; margin-bottom: 20px;">Вы уверены, что хотите удалить эту публикацию?</h2>
+
+    <div style="background-color: #fff; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+        <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+            Автор: {{ post.author.get_full_name }} |
+            Дата: {{ post.created_at|date:"d.m.Y H:i" }}
+        </p>
+        <p style="line-height: 1.6;">{{ post.content|truncatewords:50 }}</p>
+    </div>
+
+    <p style="color: #721c24; font-weight: 500; margin-bottom: 20px;">
+        Это действие невозможно отменить!
+    </p>
+
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Да, удалить</button>
+    </form>
+    <a href="{% url 'core:post_detail' post.id %}" class="btn btn-secondary" style="margin-left: 10px;">Отмена</a>
+</div>
+{% endblock %}

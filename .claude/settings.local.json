@@ -4,7 +4,10 @@
       "Bash(python manage.py startapp:*)",
       "Bash(python3 manage.py:*)",
       "Bash(django-admin startapp:*)",
-      "Bash(docker-compose run:*)"
+      "Bash(docker-compose run:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(docker-compose exec:*)"
     ]
   }
 }

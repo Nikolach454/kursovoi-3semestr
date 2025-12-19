@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ community.name }} - Социальная сеть{% endblock %}
+
+{% block content %}
+<div style="border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: #fafafa; margin-bottom: 20px;">
+    <h1>{{ community.name }}</h1>
+
+    {% if community.description %}
+        <p style="margin-top: 15px; line-height: 1.8;">{{ community.description }}</p>
+    {% endif %}
+
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+        <p><strong>Владелец:</strong> <a href="{% url 'core:user_profile' community.owner.id %}" style="color: #0066cc;">{{ community.owner.get_full_name }}</a></p>
+        <p><strong>Тип:</strong> {{ community.get_type_display }}</p>
+        <p><strong>Участников:</strong> {{ community.members_count }}</p>
+        <p><strong>Создано:</strong> {{ community.created_at|date:"d.m.Y H:i" }}</p>
+    </div>
+</div>
+
+<h2>Публикации сообщества ({{ community_posts.count }})</h2>
+
+{% if community_posts %}
+    <div style="margin-top: 20px;">
+        {% for post in community_posts %}
+            <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
+                <h3>
+                    <a href="{% url 'core:post_detail' post.id %}" style="color: #0066cc; text-decoration: none;">
+                        Пост от {{ post.author.get_full_name }}
+                    </a>
+                </h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                    Автор: <a href="{% url 'core:user_profile' post.author.id %}" style="color: #0066cc;">{{ post.author.get_full_name }}</a> |
+                    {{ post.created_at|date:"d.m.Y H:i" }} |
+                    Просмотров: {{ post.views_count }}
+                </p>
+                <p>{{ post.content|truncatewords:30 }}</p>
+                <a href="{% url 'core:post_detail' post.id %}" class="btn" style="margin-top: 10px;">Читать далее</a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>В сообществе пока нет публикаций.</p>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'core:community_list' %}" class="btn btn-secondary">Назад к списку сообществ</a>
+</div>
+{% endblock %}

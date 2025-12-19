@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ post.author.get_full_name }} - Социальная сеть{% endblock %}
+
+{% block content %}
+<div style="border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: #fafafa;">
+    <h1>Публикация от {{ post.author.get_full_name }}</h1>
+
+    <div style="color: #666; font-size: 14px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #ddd;">
+        <p>
+            Автор: <a href="{% url 'core:user_profile' post.author.id %}" style="color: #0066cc;">{{ post.author.get_full_name }}</a>
+        </p>
+        {% if post.community %}
+            <p>
+                Сообщество: <a href="{% url 'core:community_detail' post.community.id %}" style="color: #0066cc;">{{ post.community.name }}</a>
+            </p>
+        {% endif %}
+        <p>Дата публикации: {{ post.created_at|date:"d.m.Y H:i" }}</p>
+        <p>Просмотров: {{ post.views_count }}</p>
+    </div>
+
+    <div style="margin-top: 20px; line-height: 1.8;">
+        <p>{{ post.content|linebreaks }}</p>
+    </div>
+
+    {% if user.is_authenticated and post.author == user %}
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <a href="{% url 'core:post_edit' post.id %}" class="btn">Редактировать</a>
+            <a href="{% url 'core:post_delete' post.id %}" class="btn btn-danger" style="margin-left: 10px;">Удалить</a>
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+        <h3>Комментарии ({{ post.comments.count }})</h3>
+        {% if post.comments.all %}
+            {% for comment in post.comments.all %}
+                <div style="border-left: 3px solid #0066cc; padding-left: 15px; margin-top: 15px;">
+                    <p style="font-weight: 500;">{{ comment.author.get_full_name }}</p>
+                    <p style="font-size: 13px; color: #666;">{{ comment.created_at|date:"d.m.Y H:i" }}</p>
+                    <p style="margin-top: 10px;">{{ comment.content }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #666; margin-top: 10px;">Комментариев пока нет.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'core:post_list' %}" class="btn btn-secondary">Назад к списку</a>
+</div>
+{% endblock %}

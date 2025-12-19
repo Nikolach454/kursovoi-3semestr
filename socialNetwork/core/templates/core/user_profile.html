@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ profile_user.get_full_name }} - Профиль{% endblock %}
+
+{% block content %}
+<div style="border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: #fafafa; margin-bottom: 20px;">
+    <h1>{{ profile_user.get_full_name }}</h1>
+
+    <div style="margin-top: 20px;">
+        <p><strong>Email:</strong> {{ profile_user.email }}</p>
+        {% if profile_user.username %}
+            <p><strong>Имя пользователя:</strong> {{ profile_user.username }}</p>
+        {% endif %}
+        {% if profile_user.bio %}
+            <p><strong>О себе:</strong> {{ profile_user.bio }}</p>
+        {% endif %}
+        {% if profile_user.city %}
+            <p><strong>Город:</strong> {{ profile_user.city }}</p>
+        {% endif %}
+        {% if profile_user.birth_date %}
+            <p><strong>Дата рождения:</strong> {{ profile_user.birth_date|date:"d.m.Y" }}</p>
+        {% endif %}
+        <p><strong>Зарегистрирован:</strong> {{ profile_user.created_at|date:"d.m.Y" }}</p>
+    </div>
+</div>
+
+<h2>Публикации пользователя ({{ user_posts.count }})</h2>
+
+{% if user_posts %}
+    <div style="margin-top: 20px;">
+        {% for post in user_posts %}
+            <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
+                <h3>
+                    <a href="{% url 'core:post_detail' post.id %}" style="color: #0066cc; text-decoration: none;">
+                        Публикация от {{ post.created_at|date:"d.m.Y" }}
+                    </a>
+                </h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                    {{ post.created_at|date:"d.m.Y H:i" }} |
+                    Просмотров: {{ post.views_count }}
+                </p>
+                <p>{{ post.content|truncatewords:30 }}</p>
+                <a href="{% url 'core:post_detail' post.id %}" class="btn" style="margin-top: 10px;">Читать далее</a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>У пользователя пока нет публикаций.</p>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'core:index' %}" class="btn btn-secondary">Вернуться на главную</a>
+</div>
+{% endblock %}

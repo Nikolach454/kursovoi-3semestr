@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Главная - Социальная сеть{% endblock %}
+
+{% block content %}
+<h1>Добро пожаловать в социальную сеть!</h1>
+
+<p>Это главная страница нашей социальной сети.</p>
+
+<h2>Последние публикации</h2>
+
+{% if latest_posts %}
+    <div style="margin-top: 20px;">
+        {% for post in latest_posts %}
+            <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
+                <h3>
+                    <a href="{% url 'core:post_detail' post.id %}" style="color: #0066cc; text-decoration: none;">
+                        Пост от {{ post.author.get_full_name }}
+                    </a>
+                </h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                    {{ post.created_at|date:"d.m.Y H:i" }} |
+                    Просмотров: {{ post.views_count }}
+                </p>
+                <p>{{ post.content|truncatewords:30 }}</p>
+                <a href="{% url 'core:post_detail' post.id %}" class="btn" style="margin-top: 10px;">Читать далее</a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Публикаций пока нет.</p>
+{% endif %}
+
+<div style="margin-top: 30px;">
+    <a href="{% url 'core:post_list' %}" class="btn">Все публикации</a>
+    <a href="{% url 'core:community_list' %}" class="btn btn-secondary" style="margin-left: 10px;">Все сообщества</a>
+</div>
+{% endblock %}
