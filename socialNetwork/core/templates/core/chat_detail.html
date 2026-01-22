@@ -1,0 +1,365 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Чат - Социальная сеть{% endblock %}
+
+{% block content %}
+<style>
+    .chat-container {
+        max-width: 700px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 200px);
+        min-height: 500px;
+    }
+    .chat-header {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px 8px 0 0;
+        border-bottom: none;
+    }
+    .chat-header-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+        margin-right: 12px;
+    }
+    .chat-header-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .chat-header-info h2 {
+        font-size: 16px;
+        margin: 0;
+    }
+    .chat-header-info p {
+        color: #65676b;
+        font-size: 13px;
+        margin: 2px 0 0;
+    }
+    .back-link {
+        margin-left: auto;
+        color: #0066cc;
+        text-decoration: none;
+    }
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: #f0f2f5;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+    .message {
+        display: flex;
+        margin-bottom: 15px;
+    }
+    .message.own {
+        flex-direction: row-reverse;
+    }
+    .message-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #666;
+        flex-shrink: 0;
+    }
+    .message-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .message-content {
+        max-width: 70%;
+        margin: 0 10px;
+    }
+    .message-bubble {
+        padding: 10px 15px;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .message.own .message-bubble {
+        background: #0066cc;
+        color: #fff;
+    }
+    .message-text {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+    .message-image {
+        max-width: 100%;
+        border-radius: 12px;
+        margin-top: 8px;
+    }
+    .message-time {
+        font-size: 11px;
+        color: #65676b;
+        margin-top: 4px;
+        padding: 0 5px;
+    }
+    .message.own .message-time {
+        text-align: right;
+    }
+    .message-sender {
+        font-size: 12px;
+        font-weight: 600;
+        color: #65676b;
+        margin-bottom: 4px;
+        padding: 0 5px;
+    }
+    .message-form-container {
+        padding: 15px 20px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 0 0 8px 8px;
+        border-top: none;
+    }
+    .message-form {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+    }
+    .message-input-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .message-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+        resize: none;
+        font-family: inherit;
+    }
+    .message-input:focus {
+        outline: none;
+        border-color: #0066cc;
+    }
+    .file-input-wrapper {
+        position: relative;
+    }
+    .file-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    .file-btn {
+        padding: 10px 15px;
+        background: #f0f2f5;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        color: #65676b;
+        font-size: 14px;
+    }
+    .file-btn:hover {
+        background: #e4e6eb;
+    }
+    .send-btn {
+        padding: 10px 20px;
+        background: #0066cc;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .send-btn:hover {
+        background: #0052a3;
+    }
+    .file-preview {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .file-preview-item {
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+    .file-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .file-preview-remove {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 20px;
+        height: 20px;
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    .empty-chat {
+        text-align: center;
+        padding: 40px;
+        color: #65676b;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="chat-header-avatar">
+            {% if chat.type == 'private' %}
+                {% for participant in chat.participants.all %}
+                    {% if participant.user != user %}
+                        {% if participant.user.avatar %}
+                            <img src="{{ participant.user.avatar.url }}" alt="">
+                        {% else %}
+                            {{ participant.user.first_name.0 }}{{ participant.user.last_name.0 }}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if chat.avatar %}
+                    <img src="{{ chat.avatar.url }}" alt="">
+                {% else %}
+                    {{ chat.name.0|default:"G" }}
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="chat-header-info">
+            <h2>
+                {% if chat.type == 'private' %}
+                    {% for participant in chat.participants.all %}
+                        {% if participant.user != user %}
+                            <a href="{% url 'core:user_profile' participant.user.id %}" style="color: inherit; text-decoration: none;">
+                                {{ participant.user.get_full_name }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {{ chat.name|default:"Групповой чат" }}
+                {% endif %}
+            </h2>
+            <p>
+                {% if chat.type == 'private' %}
+                    {% for participant in chat.participants.all %}
+                        {% if participant.user != user %}
+                            {% if participant.user.is_online %}
+                                в сети
+                            {% else %}
+                                {% if participant.user.last_seen %}
+                                    был(а) {{ participant.user.last_seen|date:"d.m в H:i" }}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {{ chat.participants.count }} участников
+                {% endif %}
+            </p>
+        </div>
+        <a href="{% url 'core:chats_list' %}" class="back-link">Назад</a>
+    </div>
+
+    <div class="messages-container" id="messages-container">
+        {% if messages %}
+            {% for msg in messages %}
+            <div class="message {% if msg.sender == user %}own{% endif %}">
+                <div class="message-avatar">
+                    {% if msg.sender.avatar %}
+                        <img src="{{ msg.sender.avatar.url }}" alt="">
+                    {% else %}
+                        {{ msg.sender.first_name.0 }}{{ msg.sender.last_name.0 }}
+                    {% endif %}
+                </div>
+                <div class="message-content">
+                    {% if chat.type == 'group' and msg.sender != user %}
+                        <div class="message-sender">{{ msg.sender.first_name }}</div>
+                    {% endif %}
+                    <div class="message-bubble">
+                        <div class="message-text">{{ msg.content }}</div>
+                    </div>
+                    {% for media in msg.media_files.all %}
+                        {% if media.type == 'image' %}
+                            <img src="{{ media.file.url }}" alt="Image" class="message-image">
+                        {% endif %}
+                    {% endfor %}
+                    <div class="message-time">{{ msg.created_at|date:"H:i" }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-chat">
+                <p>Начните общение!</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="message-form-container">
+        <form method="post" enctype="multipart/form-data" class="message-form">
+            {% csrf_token %}
+            <div class="message-input-wrapper">
+                <div class="file-preview" id="file-preview"></div>
+                <textarea name="content" class="message-input" placeholder="Введите сообщение..." rows="1"></textarea>
+            </div>
+            <div class="file-input-wrapper">
+                <button type="button" class="file-btn">📎</button>
+                <input type="file" name="images" class="file-input" accept="image/*" multiple id="file-input">
+            </div>
+            <button type="submit" class="send-btn">Отправить</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('messages-container');
+    container.scrollTop = container.scrollHeight;
+
+    const fileInput = document.getElementById('file-input');
+    const filePreview = document.getElementById('file-preview');
+
+    fileInput.addEventListener('change', function() {
+        filePreview.innerHTML = '';
+        Array.from(this.files).forEach((file, index) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const item = document.createElement('div');
+                    item.className = 'file-preview-item';
+                    item.innerHTML = `<img src="${e.target.result}" alt="">`;
+                    filePreview.appendChild(item);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

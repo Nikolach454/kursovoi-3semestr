@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from import_export.admin import ImportExportModelAdmin
+from simple_history.admin import SimpleHistoryAdmin
 from .models import (
     City, Role, User, Community, Post, Comment, Chat, Message,
     Media, Like, Friendship, UserCommunity, ChatParticipant
 )
+from .resources import PostResource, CommunityResource, UserResource, CommentResource
 
 
 @admin.register(City)
@@ -38,7 +41,8 @@ class FriendshipInitiatedInline(admin.TabularInline):
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(ImportExportModelAdmin, SimpleHistoryAdmin, BaseUserAdmin):
+    resource_class = UserResource
     list_display = ('id', 'email', 'get_full_name_display', 'username', 'city', 'is_online_display', 'is_verified', 'role', 'is_staff', 'created_at')
     list_display_links = ('id', 'email')
     list_filter = ('is_staff', 'is_active', 'is_verified', 'is_online', 'gender', 'role', 'city')
@@ -53,7 +57,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password', 'first_name', 'last_name', 'username')
         }),
         ('Профиль', {
-            'fields': ('avatar_url', 'bio', 'phone', 'city', 'birth_date', 'gender')
+            'fields': ('avatar', 'bio', 'phone', 'city', 'birth_date', 'gender')
         }),
         ('Статус', {
             'fields': ('is_online', 'last_seen', 'is_verified', 'role')
@@ -102,7 +106,8 @@ class PostInline(admin.TabularInline):
 
 
 @admin.register(Community)
-class CommunityAdmin(admin.ModelAdmin):
+class CommunityAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+    resource_class = CommunityResource
     list_display = ('id', 'name', 'type', 'owner', 'members_count_display', 'is_verified', 'created_at')
     list_display_links = ('id', 'name')
     list_filter = ('type', 'is_verified', 'created_at')
@@ -132,7 +137,7 @@ class MediaInline(admin.TabularInline):
     fk_name = 'post'
     raw_id_fields = ('owner', 'created_by')
     readonly_fields = ('created_at',)
-    fields = ('owner', 'type', 'url', 'thumbnail_url', 'original_name')
+    fields = ('owner', 'type', 'file', 'thumbnail', 'original_name')
 
 
 class LikeInline(admin.TabularInline):
@@ -144,7 +149,8 @@ class LikeInline(admin.TabularInline):
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+    resource_class = PostResource
     list_display = ('id', 'author', 'community', 'content_preview', 'views_count', 'likes_count_display', 'is_published', 'created_at')
     list_display_links = ('id', 'content_preview')
     list_filter = ('is_published', 'created_at', 'updated_at')
@@ -164,7 +170,8 @@ class PostAdmin(admin.ModelAdmin):
 
 
 @admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
+class CommentAdmin(ImportExportModelAdmin):
+    resource_class = CommentResource
     list_display = ('id', 'author', 'post', 'content_preview', 'parent', 'likes_count_display', 'created_at')
     list_display_links = ('id', 'content_preview')
     list_filter = ('created_at', 'updated_at')
@@ -238,7 +245,7 @@ class MediaAdmin(admin.ModelAdmin):
     list_display = ('id', 'owner', 'type', 'original_name', 'size_display', 'post', 'message', 'created_at')
     list_display_links = ('id', 'original_name')
     list_filter = ('type', 'created_at')
-    search_fields = ('original_name', 'url', 'owner__email', 'owner__first_name', 'owner__last_name')
+    search_fields = ('original_name', 'file', 'owner__email', 'owner__first_name', 'owner__last_name')
     raw_id_fields = ('owner', 'post', 'message', 'created_by')
     readonly_fields = ('created_at',)
     date_hierarchy = 'created_at'

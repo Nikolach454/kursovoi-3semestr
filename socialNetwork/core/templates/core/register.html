@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Регистрация - Социальная сеть{% endblock %}
+
+{% block content %}
+<h1>Регистрация</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="message error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="form-group">
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.email.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.first_name.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.last_name.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.password1.errors }}
+            </div>
+        {% endif %}
+        <small style="color: #6c757d; font-size: 12px; display: block; margin-top: 5px;">
+            Пароль должен содержать минимум 8 символов и не может состоять только из цифр
+        </small>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.password2.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn">Зарегистрироваться</button>
+        <a href="{% url 'core:index' %}" class="btn btn-secondary" style="margin-left: 10px;">Отмена</a>
+    </div>
+</form>
+
+<p style="margin-top: 20px;">
+    Уже есть аккаунт? <a href="{% url 'core:login' %}">Войти</a>
+</p>
+{% endblock %}

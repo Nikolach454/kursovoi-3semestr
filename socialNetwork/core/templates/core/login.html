@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Вход - Социальная сеть{% endblock %}
+
+{% block content %}
+<h1>Вход в систему</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="message error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.username.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+            <div style="color: #dc3545; font-size: 14px; margin-top: 5px;">
+                {{ form.password.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn">Войти</button>
+        <a href="{% url 'core:index' %}" class="btn btn-secondary" style="margin-left: 10px;">Отмена</a>
+    </div>
+</form>
+
+<p style="margin-top: 20px;">
+    Нет аккаунта? <a href="{% url 'core:register' %}">Зарегистрироваться</a>
+</p>
+{% endblock %}

@@ -3,47 +3,344 @@
 {% block title %}{{ community.name }} - Социальная сеть{% endblock %}
 
 {% block content %}
-<div style="border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: #fafafa; margin-bottom: 20px;">
-    <h1>{{ community.name }}</h1>
+<style>
+    .community-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .community-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .community-cover {
+        height: 200px;
+        background: rgba(0,0,0,0.1);
+    }
+    .community-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .community-info-box {
+        padding: 20px 30px 30px;
+        color: #fff;
+    }
+    .community-info-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .community-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: bold;
+        border: 4px solid rgba(255,255,255,0.3);
+        margin-top: -50px;
+        flex-shrink: 0;
+    }
+    .community-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+    .community-title-section {
+        flex: 1;
+    }
+    .community-title-section h1 {
+        font-size: 28px;
+        margin-bottom: 5px;
+        color: #fff;
+    }
+    .community-type-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 12px;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    .community-stats {
+        display: flex;
+        gap: 25px;
+        margin-top: 15px;
+    }
+    .community-stat {
+        text-align: center;
+    }
+    .community-stat-value {
+        font-size: 22px;
+        font-weight: bold;
+    }
+    .community-stat-label {
+        font-size: 13px;
+        opacity: 0.8;
+    }
+    .community-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+    .btn-light {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    .btn-light:hover {
+        background: rgba(255,255,255,0.3);
+    }
+    .community-section {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    .community-section h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .community-description {
+        line-height: 1.6;
+        color: #333;
+    }
+    .members-list {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    .member-item {
+        text-align: center;
+        width: 70px;
+    }
+    .member-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 0 auto 5px;
+    }
+    .member-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .member-name {
+        font-size: 12px;
+        color: #333;
+        text-decoration: none;
+    }
+    .member-name:hover {
+        color: #0066cc;
+    }
+    .member-role {
+        font-size: 10px;
+        color: #65676b;
+    }
+    .post-card {
+        background: #f8f9fa;
+        border: 1px solid #e4e6eb;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    .post-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .post-card-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .post-card-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .post-card-info a {
+        font-weight: 600;
+        color: #333;
+        text-decoration: none;
+    }
+    .post-card-info a:hover {
+        color: #0066cc;
+    }
+    .post-card-time {
+        font-size: 12px;
+        color: #65676b;
+    }
+    .post-card-content {
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+    .post-card-footer {
+        display: flex;
+        gap: 15px;
+        color: #65676b;
+        font-size: 13px;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 30px;
+        color: #65676b;
+    }
+</style>
+
+<div class="community-container">
+    <div class="community-header">
+        <div class="community-cover">
+            {% if community.cover %}
+                <img src="{{ community.cover.url }}" alt="">
+            {% endif %}
+        </div>
+        <div class="community-info-box">
+            <div class="community-info-header">
+                <div class="community-avatar">
+                    {% if community.avatar %}
+                        <img src="{{ community.avatar.url }}" alt="">
+                    {% else %}
+                        {{ community.name.0 }}
+                    {% endif %}
+                </div>
+                <div class="community-title-section">
+                    <h1>{{ community.name }}</h1>
+                    <span class="community-type-badge">
+                        {% if community.type == 'closed' %}Закрытое сообщество{% else %}Открытое сообщество{% endif %}
+                    </span>
+                    <div class="community-stats">
+                        <div class="community-stat">
+                            <div class="community-stat-value">{{ community.members_count }}</div>
+                            <div class="community-stat-label">участников</div>
+                        </div>
+                        <div class="community-stat">
+                            <div class="community-stat-value">{{ community_posts.count }}</div>
+                            <div class="community-stat-label">публикаций</div>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="community-actions">
+                            {% if is_member %}
+                                <span class="btn btn-light" style="cursor: default;">Вы участник</span>
+                                {% if community.owner != user %}
+                                    <a href="{% url 'core:leave_community' community.id %}" class="btn btn-danger">Покинуть</a>
+                                {% endif %}
+                            {% else %}
+                                {% if community.type == 'open' %}
+                                    <a href="{% url 'core:join_community' community.id %}" class="btn btn-light">Вступить</a>
+                                {% else %}
+                                    <span class="btn btn-light" style="cursor: default;">Закрытое сообщество</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% if community.description %}
-        <p style="margin-top: 15px; line-height: 1.8;">{{ community.description }}</p>
+    <div class="community-section">
+        <h2>Описание</h2>
+        <div class="community-description">{{ community.description }}</div>
+    </div>
     {% endif %}
 
-    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
-        <p><strong>Владелец:</strong> <a href="{% url 'core:user_profile' community.owner.id %}" style="color: #0066cc;">{{ community.owner.get_full_name }}</a></p>
-        <p><strong>Тип:</strong> {{ community.get_type_display }}</p>
-        <p><strong>Участников:</strong> {{ community.members_count }}</p>
-        <p><strong>Создано:</strong> {{ community.created_at|date:"d.m.Y H:i" }}</p>
-    </div>
-</div>
-
-<h2>Публикации сообщества ({{ community_posts.count }})</h2>
-
-{% if community_posts %}
-    <div style="margin-top: 20px;">
-        {% for post in community_posts %}
-            <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
-                <h3>
-                    <a href="{% url 'core:post_detail' post.id %}" style="color: #0066cc; text-decoration: none;">
-                        Пост от {{ post.author.get_full_name }}
-                    </a>
-                </h3>
-                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
-                    Автор: <a href="{% url 'core:user_profile' post.author.id %}" style="color: #0066cc;">{{ post.author.get_full_name }}</a> |
-                    {{ post.created_at|date:"d.m.Y H:i" }} |
-                    Просмотров: {{ post.views_count }}
-                </p>
-                <p>{{ post.content|truncatewords:30 }}</p>
-                <a href="{% url 'core:post_detail' post.id %}" class="btn" style="margin-top: 10px;">Читать далее</a>
+    <div class="community-section">
+        <h2>Участники ({{ community.members_count }})</h2>
+        {% if members %}
+            <div class="members-list">
+                {% for membership in members %}
+                    <div class="member-item">
+                        <div class="member-avatar">
+                            {% if membership.user.avatar %}
+                                <img src="{{ membership.user.avatar.url }}" alt="">
+                            {% else %}
+                                {{ membership.user.first_name.0 }}{{ membership.user.last_name.0 }}
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'core:user_profile' membership.user.id %}" class="member-name">
+                            {{ membership.user.first_name }}
+                        </a>
+                        {% if membership.role != 'member' %}
+                            <div class="member-role">{{ membership.get_role_display }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>Пока нет участников</p>
+            </div>
+        {% endif %}
     </div>
-{% else %}
-    <p>В сообществе пока нет публикаций.</p>
-{% endif %}
 
-<div style="margin-top: 20px;">
-    <a href="{% url 'core:community_list' %}" class="btn btn-secondary">Назад к списку сообществ</a>
+    <div class="community-section">
+        <h2>Публикации ({{ community_posts.count }})</h2>
+        {% if community_posts %}
+            {% for post in community_posts %}
+                <div class="post-card">
+                    <div class="post-card-header">
+                        <div class="post-card-avatar">
+                            {% if post.author.avatar %}
+                                <img src="{{ post.author.avatar.url }}" alt="">
+                            {% else %}
+                                {{ post.author.first_name.0 }}{{ post.author.last_name.0 }}
+                            {% endif %}
+                        </div>
+                        <div class="post-card-info">
+                            <a href="{% url 'core:user_profile' post.author.id %}">{{ post.author.get_full_name }}</a>
+                            <div class="post-card-time">{{ post.created_at|date:"d.m.Y в H:i" }}</div>
+                        </div>
+                    </div>
+                    <div class="post-card-content">{{ post.content|truncatewords:50 }}</div>
+                    {% if post.media_files.all %}
+                        {% for media in post.media_files.all|slice:":1" %}
+                            {% if media.type == 'image' %}
+                                <img src="{{ media.file.url }}" alt="" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="post-card-footer">
+                        <span>❤ {{ post.likes.count }}</span>
+                        <span>💬 {{ post.comments.count }}</span>
+                        <span>👁 {{ post.views_count }}</span>
+                        <a href="{% url 'core:post_detail' post.id %}" style="margin-left: auto; color: #0066cc;">Читать</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>В сообществе пока нет публикаций</p>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

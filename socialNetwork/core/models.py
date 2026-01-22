@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from simple_history.models import HistoricalRecords
 
 
 class City(models.Model):
@@ -55,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=100, verbose_name='Имя')
     last_name = models.CharField(max_length=100, verbose_name='Фамилия')
     username = models.CharField(max_length=50, unique=True, blank=True, null=True, verbose_name='Имя пользователя')
-    avatar_url = models.CharField(max_length=500, blank=True, null=True, verbose_name='URL аватара')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name='Аватар')
     bio = models.TextField(blank=True, null=True, verbose_name='О себе')
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Телефон')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Город')
@@ -72,6 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_by = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, related_name='users_created', verbose_name='Создал')
     updated_by = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, related_name='users_updated', verbose_name='Обновил')
 
+    history = HistoricalRecords()
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -97,8 +99,8 @@ class Community(models.Model):
 
     name = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(blank=True, null=True, verbose_name='Описание')
-    avatar_url = models.CharField(max_length=500, blank=True, null=True, verbose_name='URL аватара')
-    cover_url = models.CharField(max_length=500, blank=True, null=True, verbose_name='URL обложки')
+    avatar = models.ImageField(upload_to='community_avatars/', blank=True, null=True, verbose_name='Аватар')
+    cover = models.ImageField(upload_to='community_covers/', blank=True, null=True, verbose_name='Обложка')
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='open', verbose_name='Тип')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_communities', verbose_name='Владелец')
     members_count = models.PositiveIntegerField(default=0, verbose_name='Количество участников')
@@ -107,6 +109,8 @@ class Community(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='communities_created', verbose_name='Создал')
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='communities_updated', verbose_name='Обновил')
+
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = 'Сообщество'
@@ -127,6 +131,8 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='posts_created', verbose_name='Создал')
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='posts_updated', verbose_name='Обновил')
+
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = 'Публикация'
@@ -164,7 +170,7 @@ class Chat(models.Model):
 
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='private', verbose_name='Тип')
     name = models.CharField(max_length=255, blank=True, null=True, verbose_name='Название')
-    avatar_url = models.CharField(max_length=500, blank=True, null=True, verbose_name='URL аватара')
+    avatar = models.ImageField(upload_to='chat_avatars/', blank=True, null=True, verbose_name='Аватар')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='chats_created', verbose_name='Создал')
@@ -215,8 +221,8 @@ class Media(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_files', verbose_name='Владелец')
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='image', verbose_name='Тип')
-    url = models.CharField(max_length=500, verbose_name='URL')
-    thumbnail_url = models.CharField(max_length=500, blank=True, null=True, verbose_name='URL миниатюры')
+    file = models.FileField(upload_to='uploads/%Y/%m/%d/', verbose_name='Файл')
+    thumbnail = models.ImageField(upload_to='thumbnails/%Y/%m/%d/', blank=True, null=True, verbose_name='Миниатюра')
     mime_type = models.CharField(max_length=100, blank=True, null=True, verbose_name='MIME тип')
     size = models.BigIntegerField(blank=True, null=True, verbose_name='Размер (байты)')
     original_name = models.CharField(max_length=255, blank=True, null=True, verbose_name='Оригинальное имя')
@@ -231,7 +237,7 @@ class Media(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.get_type_display()} - {self.original_name or self.url}"
+        return f"{self.get_type_display()} - {self.original_name or self.file.name}"
 
 
 class Like(models.Model):

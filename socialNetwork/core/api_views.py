@@ -1,15 +1,23 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count, Q
 from django.utils import timezone
 from .models import Post, Community, User, Comment, Like, UserCommunity
 from .serializers import PostSerializer, CommunitySerializer, CommentSerializer
+from .filters import PostFilter, CommunityFilter, CommentFilter
 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = PostFilter
+    search_fields = ['content', 'author__first_name', 'author__last_name']
+    ordering_fields = ['created_at', 'views_count', 'updated_at']
+    ordering = ['-created_at']
 
     def get_queryset(self):
         queryset = Post.objects.filter(is_published=True)
@@ -154,6 +162,11 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommunityViewSet(viewsets.ModelViewSet):
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = CommunityFilter
+    search_fields = ['name', 'description']
+    ordering_fields = ['created_at', 'members_count', 'name']
+    ordering = ['-created_at']
 
     def get_queryset(self):
         queryset = Community.objects.all()

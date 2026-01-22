@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'full_name', 'username',
-                  'avatar_url', 'bio', 'phone', 'city', 'birth_date', 'gender',
+                  'avatar', 'bio', 'phone', 'city', 'birth_date', 'gender',
                   'is_online', 'last_seen', 'is_verified', 'created_at']
         read_only_fields = ['id', 'is_verified', 'created_at']
 
@@ -75,7 +75,7 @@ class CommunitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Community
-        fields = ['id', 'name', 'description', 'avatar_url', 'cover_url', 'type',
+        fields = ['id', 'name', 'description', 'avatar', 'cover', 'type',
                   'owner', 'owner_name', 'members_count', 'is_verified',
                   'created_at', 'updated_at', 'posts_count']
         read_only_fields = ['id', 'owner', 'members_count', 'is_verified',

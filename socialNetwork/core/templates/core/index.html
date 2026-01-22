@@ -1,38 +1,358 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Главная - Социальная сеть{% endblock %}
+{% block title %}Лента - Социальная сеть{% endblock %}
 
 {% block content %}
-<h1>Добро пожаловать в социальную сеть!</h1>
+<style>
+    .feed-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .create-post-box {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .create-post-box textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 14px;
+    }
+    .create-post-box textarea:focus {
+        outline: none;
+        border-color: #0066cc;
+    }
+    .post-form-actions {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .post-form-attachments {
+        display: flex;
+        gap: 10px;
+    }
+    .attach-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 12px;
+        background: #f0f2f5;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #65676b;
+        font-size: 14px;
+        position: relative;
+    }
+    .attach-btn:hover {
+        background: #e4e6eb;
+    }
+    .attach-btn input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .image-preview {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+    .image-preview-item {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+    .image-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .image-preview-remove {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 24px;
+        height: 24px;
+        background: #dc3545;
+        color: #fff;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .post-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .post-header {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .post-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #fff;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    .post-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .post-info {
+        flex: 1;
+    }
+    .post-author {
+        font-weight: 600;
+        color: #333;
+        text-decoration: none;
+        font-size: 15px;
+    }
+    .post-author:hover {
+        color: #0066cc;
+    }
+    .post-time {
+        color: #65676b;
+        font-size: 13px;
+    }
+    .post-content {
+        padding: 0 20px 15px;
+        color: #333;
+        line-height: 1.5;
+        white-space: pre-wrap;
+    }
+    .post-images {
+        display: grid;
+        gap: 2px;
+    }
+    .post-images.single {
+        grid-template-columns: 1fr;
+    }
+    .post-images.double {
+        grid-template-columns: 1fr 1fr;
+    }
+    .post-images.triple {
+        grid-template-columns: 1fr 1fr;
+    }
+    .post-images.quad {
+        grid-template-columns: 1fr 1fr;
+    }
+    .post-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        cursor: pointer;
+    }
+    .post-actions {
+        padding: 10px 20px;
+        border-top: 1px solid #e4e6eb;
+        display: flex;
+        gap: 15px;
+    }
+    .post-action-btn {
+        background: none;
+        border: none;
+        color: #65676b;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: background 0.2s;
+        text-decoration: none;
+    }
+    .post-action-btn:hover {
+        background: #f2f3f5;
+    }
+    .post-action-btn.liked {
+        color: #e41e3f;
+        font-weight: 600;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #65676b;
+        background: #fff;
+        border-radius: 8px;
+    }
+    .empty-state h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    .page-link {
+        padding: 8px 16px;
+        background: #f0f2f5;
+        color: #333;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+    .page-link:hover {
+        background: #e4e6eb;
+    }
+    .page-current {
+        padding: 8px 16px;
+        color: #65676b;
+        font-size: 14px;
+    }
+</style>
 
-<p>Это главная страница нашей социальной сети.</p>
-
-<h2>Последние публикации</h2>
-
-{% if latest_posts %}
-    <div style="margin-top: 20px;">
-        {% for post in latest_posts %}
-            <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
-                <h3>
-                    <a href="{% url 'core:post_detail' post.id %}" style="color: #0066cc; text-decoration: none;">
-                        Пост от {{ post.author.get_full_name }}
-                    </a>
-                </h3>
-                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
-                    {{ post.created_at|date:"d.m.Y H:i" }} |
-                    Просмотров: {{ post.views_count }}
-                </p>
-                <p>{{ post.content|truncatewords:30 }}</p>
-                <a href="{% url 'core:post_detail' post.id %}" class="btn" style="margin-top: 10px;">Читать далее</a>
+<div class="feed-container">
+    {% if user.is_authenticated %}
+    <div class="create-post-box">
+        <form method="post" enctype="multipart/form-data" id="post-form">
+            {% csrf_token %}
+            <textarea name="content" placeholder="Что у вас нового, {{ user.first_name }}?" required></textarea>
+            <div class="image-preview" id="image-preview"></div>
+            <div class="post-form-actions">
+                <div class="post-form-attachments">
+                    <label class="attach-btn">
+                        <span>📷 Фото</span>
+                        <input type="file" name="images" accept="image/*" multiple id="image-input">
+                    </label>
+                </div>
+                <button type="submit" name="quick_post" class="btn">Опубликовать</button>
             </div>
-        {% endfor %}
+        </form>
     </div>
-{% else %}
-    <p>Публикаций пока нет.</p>
-{% endif %}
+    {% endif %}
 
-<div style="margin-top: 30px;">
-    <a href="{% url 'core:post_list' %}" class="btn">Все публикации</a>
-    <a href="{% url 'core:community_list' %}" class="btn btn-secondary" style="margin-left: 10px;">Все сообщества</a>
+    {% if latest_posts %}
+        {% for post in latest_posts %}
+        <div class="post-card">
+            <div class="post-header">
+                <div class="post-avatar">
+                    {% if post.author.avatar %}
+                        <img src="{{ post.author.avatar.url }}" alt="">
+                    {% else %}
+                        {{ post.author.first_name.0 }}{{ post.author.last_name.0 }}
+                    {% endif %}
+                </div>
+                <div class="post-info">
+                    <a href="{% url 'core:user_profile' post.author.id %}" class="post-author">
+                        {{ post.author.get_full_name }}
+                    </a>
+                    <div class="post-time">{{ post.created_at|date:"d.m.Y в H:i" }}</div>
+                </div>
+            </div>
+
+            <div class="post-content">{{ post.content }}</div>
+
+            {% with images=post.media_files.all %}
+                {% if images %}
+                    <div class="post-images {% if images|length == 1 %}single{% elif images|length == 2 %}double{% elif images|length == 3 %}triple{% else %}quad{% endif %}">
+                        {% for media in images %}
+                            {% if media.type == 'image' %}
+                                <img src="{{ media.file.url }}" alt="Photo" class="post-image">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="post-actions">
+                <a href="{% url 'core:toggle_like' post.id %}" class="post-action-btn">
+                    ❤ {{ post.likes.count }}
+                </a>
+                <a href="{% url 'core:post_detail' post.id %}" class="post-action-btn">
+                    💬 {{ post.comments.count }}
+                </a>
+                <span class="post-action-btn">👁 {{ post.views_count }}</span>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Пагинация -->
+        {% if latest_posts.has_other_pages %}
+        <div class="pagination">
+            {% if latest_posts.has_previous %}
+                <a href="?page=1" class="page-link">&laquo; Первая</a>
+                <a href="?page={{ latest_posts.previous_page_number }}" class="page-link">Назад</a>
+            {% endif %}
+
+            <span class="page-current">
+                Страница {{ latest_posts.number }} из {{ latest_posts.paginator.num_pages }}
+            </span>
+
+            {% if latest_posts.has_next %}
+                <a href="?page={{ latest_posts.next_page_number }}" class="page-link">Вперед</a>
+                <a href="?page={{ latest_posts.paginator.num_pages }}" class="page-link">Последняя &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    {% else %}
+        <div class="empty-state">
+            <h2>Здесь пока пусто</h2>
+            <p>Начните публиковать посты или найдите друзей!</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'core:friends_list' %}?tab=search" class="btn" style="margin-top: 15px;">Найти друзей</a>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image-input');
+    const imagePreview = document.getElementById('image-preview');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function() {
+            imagePreview.innerHTML = '';
+            Array.from(this.files).forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const item = document.createElement('div');
+                        item.className = 'image-preview-item';
+                        item.innerHTML = `<img src="${e.target.result}" alt="">`;
+                        imagePreview.appendChild(item);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    }
+});
+</script>
 {% endblock %}

@@ -3,52 +3,396 @@
 {% block title %}{{ profile_user.get_full_name }} - Профиль{% endblock %}
 
 {% block content %}
-<div style="border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: #fafafa; margin-bottom: 20px;">
-    <h1>{{ profile_user.get_full_name }}</h1>
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .profile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 30px;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+    .profile-header-content {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: bold;
+        flex-shrink: 0;
+        border: 4px solid rgba(255,255,255,0.3);
+    }
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .profile-info h1 {
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+    .profile-status {
+        opacity: 0.9;
+        font-size: 14px;
+    }
+    .profile-status.online {
+        color: #90EE90;
+    }
+    .profile-stats {
+        display: flex;
+        gap: 30px;
+        margin-top: 15px;
+    }
+    .profile-stat {
+        text-align: center;
+    }
+    .profile-stat-value {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .profile-stat-label {
+        font-size: 13px;
+        opacity: 0.8;
+    }
+    .profile-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .profile-actions .btn {
+        padding: 10px 20px;
+    }
+    .btn-light {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    .btn-light:hover {
+        background: rgba(255,255,255,0.3);
+    }
+    .profile-details {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    .profile-details h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .profile-detail-item {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .profile-detail-item:last-child {
+        border-bottom: none;
+    }
+    .profile-detail-label {
+        width: 150px;
+        color: #65676b;
+        flex-shrink: 0;
+    }
+    .profile-detail-value {
+        color: #333;
+    }
+    .profile-section {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    .profile-section h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .friends-preview {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    .friend-preview-item {
+        text-align: center;
+        width: 80px;
+    }
+    .friend-preview-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        margin: 0 auto 8px;
+    }
+    .friend-preview-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .friend-preview-name {
+        font-size: 12px;
+        color: #333;
+        text-decoration: none;
+    }
+    .friend-preview-name:hover {
+        color: #0066cc;
+    }
+    .post-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+    .post-header {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .post-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .post-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .post-info {
+        flex: 1;
+    }
+    .post-author {
+        font-weight: 600;
+        color: #333;
+    }
+    .post-time {
+        color: #65676b;
+        font-size: 13px;
+    }
+    .post-content {
+        padding: 0 20px 15px;
+        color: #333;
+        line-height: 1.5;
+    }
+    .post-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+    }
+    .post-actions {
+        padding: 10px 20px;
+        border-top: 1px solid #e4e6eb;
+        display: flex;
+        gap: 15px;
+    }
+    .post-action-btn {
+        background: none;
+        border: none;
+        color: #65676b;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+    .post-action-btn:hover {
+        background: #f2f3f5;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 30px;
+        color: #65676b;
+    }
+</style>
 
-    <div style="margin-top: 20px;">
-        <p><strong>Email:</strong> {{ profile_user.email }}</p>
-        {% if profile_user.username %}
-            <p><strong>Имя пользователя:</strong> {{ profile_user.username }}</p>
-        {% endif %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-header-content">
+            <div class="profile-avatar">
+                {% if profile_user.avatar %}
+                    <img src="{{ profile_user.avatar.url }}" alt="">
+                {% else %}
+                    {{ profile_user.first_name.0 }}{{ profile_user.last_name.0 }}
+                {% endif %}
+            </div>
+            <div class="profile-info">
+                <h1>{{ profile_user.get_full_name }}</h1>
+                <div class="profile-status {% if profile_user.is_online %}online{% endif %}">
+                    {% if profile_user.is_online %}
+                        в сети
+                    {% else %}
+                        {% if profile_user.last_seen %}
+                            был(а) {{ profile_user.last_seen|date:"d.m.Y в H:i" }}
+                        {% else %}
+                            оффлайн
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">{{ friends_count|default:0 }}</div>
+                        <div class="profile-stat-label">друзей</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">{{ user_posts.count }}</div>
+                        <div class="profile-stat-label">публикаций</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">{{ communities_count|default:0 }}</div>
+                        <div class="profile-stat-label">сообществ</div>
+                    </div>
+                </div>
+                {% if user.is_authenticated and user == profile_user %}
+                    <div class="profile-actions">
+                        <a href="{% url 'core:edit_profile' %}" class="btn btn-light">Редактировать профиль</a>
+                    </div>
+                {% elif user.is_authenticated and user != profile_user %}
+                    <div class="profile-actions">
+                        {% if friendship_status == 'accepted' %}
+                            <a href="{% url 'core:create_chat' profile_user.id %}" class="btn btn-light">Написать сообщение</a>
+                            <a href="{% url 'core:remove_friend' profile_user.id %}" class="btn btn-danger">Удалить из друзей</a>
+                        {% elif friendship_status == 'pending_sent' %}
+                            <span class="btn btn-light" style="cursor: default;">Заявка отправлена</span>
+                            <a href="{% url 'core:create_chat' profile_user.id %}" class="btn btn-light">Написать</a>
+                        {% elif friendship_status == 'pending_received' %}
+                            <a href="{% url 'core:accept_friend' pending_friendship_id %}" class="btn">Принять заявку</a>
+                            <a href="{% url 'core:decline_friend' pending_friendship_id %}" class="btn btn-light">Отклонить</a>
+                        {% else %}
+                            <a href="{% url 'core:add_friend' profile_user.id %}" class="btn btn-light">Добавить в друзья</a>
+                            <a href="{% url 'core:create_chat' profile_user.id %}" class="btn btn-light">Написать</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-details">
+        <h2>Информация</h2>
         {% if profile_user.bio %}
-            <p><strong>О себе:</strong> {{ profile_user.bio }}</p>
+            <div class="profile-detail-item">
+                <div class="profile-detail-label">О себе</div>
+                <div class="profile-detail-value">{{ profile_user.bio }}</div>
+            </div>
         {% endif %}
         {% if profile_user.city %}
-            <p><strong>Город:</strong> {{ profile_user.city }}</p>
+            <div class="profile-detail-item">
+                <div class="profile-detail-label">Город</div>
+                <div class="profile-detail-value">{{ profile_user.city }}</div>
+            </div>
         {% endif %}
         {% if profile_user.birth_date %}
-            <p><strong>Дата рождения:</strong> {{ profile_user.birth_date|date:"d.m.Y" }}</p>
-        {% endif %}
-        <p><strong>Зарегистрирован:</strong> {{ profile_user.created_at|date:"d.m.Y" }}</p>
-    </div>
-</div>
-
-<h2>Публикации пользователя ({{ user_posts.count }})</h2>
-
-{% if user_posts %}
-    <div style="margin-top: 20px;">
-        {% for post in user_posts %}
-            <div style="border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
-                <h3>
-                    <a href="{% url 'core:post_detail' post.id %}" style="color: #0066cc; text-decoration: none;">
-                        Публикация от {{ post.created_at|date:"d.m.Y" }}
-                    </a>
-                </h3>
-                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
-                    {{ post.created_at|date:"d.m.Y H:i" }} |
-                    Просмотров: {{ post.views_count }}
-                </p>
-                <p>{{ post.content|truncatewords:30 }}</p>
-                <a href="{% url 'core:post_detail' post.id %}" class="btn" style="margin-top: 10px;">Читать далее</a>
+            <div class="profile-detail-item">
+                <div class="profile-detail-label">Дата рождения</div>
+                <div class="profile-detail-value">{{ profile_user.birth_date|date:"d.m.Y" }}</div>
             </div>
-        {% endfor %}
+        {% endif %}
+        <div class="profile-detail-item">
+            <div class="profile-detail-label">Зарегистрирован</div>
+            <div class="profile-detail-value">{{ profile_user.created_at|date:"d.m.Y" }}</div>
+        </div>
     </div>
-{% else %}
-    <p>У пользователя пока нет публикаций.</p>
-{% endif %}
 
-<div style="margin-top: 20px;">
-    <a href="{% url 'core:index' %}" class="btn btn-secondary">Вернуться на главную</a>
+    {% if friends %}
+    <div class="profile-section">
+        <h2>
+            Друзья ({{ friends_count }})
+            {% if user == profile_user %}
+                <a href="{% url 'core:friends_list' %}" style="font-size: 14px; font-weight: normal;">Показать всех</a>
+            {% endif %}
+        </h2>
+        <div class="friends-preview">
+            {% for friend in friends|slice:":6" %}
+                <div class="friend-preview-item">
+                    <div class="friend-preview-avatar">
+                        {% if friend.avatar %}
+                            <img src="{{ friend.avatar.url }}" alt="">
+                        {% else %}
+                            {{ friend.first_name.0 }}{{ friend.last_name.0 }}
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'core:user_profile' friend.id %}" class="friend-preview-name">
+                        {{ friend.first_name }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="profile-section">
+        <h2>Публикации ({{ user_posts.count }})</h2>
+        {% if user_posts %}
+            {% for post in user_posts %}
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            {% if post.author.avatar %}
+                                <img src="{{ post.author.avatar.url }}" alt="">
+                            {% else %}
+                                {{ post.author.first_name.0 }}{{ post.author.last_name.0 }}
+                            {% endif %}
+                        </div>
+                        <div class="post-info">
+                            <div class="post-author">{{ post.author.get_full_name }}</div>
+                            <div class="post-time">{{ post.created_at|date:"d.m.Y в H:i" }}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">{{ post.content }}</div>
+                    {% for media in post.media_files.all %}
+                        {% if media.type == 'image' %}
+                            <img src="{{ media.file.url }}" alt="" class="post-image">
+                        {% endif %}
+                    {% endfor %}
+                    <div class="post-actions">
+                        <a href="{% url 'core:toggle_like' post.id %}" class="post-action-btn">
+                            ❤ {{ post.likes.count }}
+                        </a>
+                        <a href="{% url 'core:post_detail' post.id %}" class="post-action-btn">
+                            💬 {{ post.comments.count }}
+                        </a>
+                        <span class="post-action-btn">👁 {{ post.views_count }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>Публикаций пока нет</p>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
